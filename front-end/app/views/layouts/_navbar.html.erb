@@ -1,0 +1,23 @@
+  <nav>
+    <div class="nav-wrapper">
+      <a href="#" class="brand-logo right">
+        <img src="<%= asset_path('logo.png') %>">
+      </a>
+      <ul id="nav-mobile" class="left hide-on-med-and-down">
+        <li>Sentiment Analysis</li>
+        <li><a href="/tasks">Tasks</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <ul id="slide-out" class="side-nav fixed" style="margin-top:65px;">
+       <li><div class="userView" style="height: 160px">
+           <img class="background" src="<%= asset_path('logo0008-small-ligthblue.png') %>">
+       </div></li>
+       <li><a href="/tasks"><i class="material-icons">playlist_add_check</i>Tasks</a></li>
+       <li><a href="/tasks/new"><i class="material-icons">playlist_add</i>New task</a></li>
+       <li><div class="divider"></div></li>
+       <li><a class="subheader">Monitoring</a></li>
+       <li><a class="waves-effect" href="#!"><i class="material-icons">show_chart</i>Load status</a></li>
+       <li><a class="waves-effect" href="#!"><i class="material-icons">subject</i>Logs</a></li>
+  </ul>

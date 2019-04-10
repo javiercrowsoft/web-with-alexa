@@ -1,0 +1,16 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  host: db
+  username: postgres
+  password: 14FeDyAr
+  pool: 5
+
+development:
+  <<: *default
+  database: sentiment_analysis
+
+test:
+  <<: *default
+  database: sentiment_analysis_test
+

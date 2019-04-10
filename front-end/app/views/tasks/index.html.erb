@@ -1,0 +1,55 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Tasks</h1>
+
+<table class="table" id="task-table">
+  <thead>
+    <tr>
+      <th>Code</th>
+      <th>Name</th>
+      <th>Status</th>
+      <th>Start</th>
+      <th>End</th>
+      <th>F Page</th>
+      <th>F Topic</th>
+      <th>T Hashtag</th>
+      <th>T Keyword</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @tasks.each do |task|
+        page = ""
+        topic = ""
+        hashtag = ""
+        keyword = ""
+        if task.facebook_task.present?
+          page = task.facebook_task.page
+          topic = task.facebook_task.topic
+        end
+        if task.twitter_task.present?
+          hashtag = task.twitter_task.hashtag
+          keyword = task.twitter_task.keyword
+        end
+    %>
+      <tr>
+        <td><%= link_to task.code, task%></td>
+        <td><%= link_to task.name, task%></td>
+        <td><%= task.task_status.name %></td>
+        <td><%= task.start_date %></td>
+        <td><%= task.end_date %></td>
+        <td><%= page %></td>
+        <td><%= topic %></td>
+        <td><%= hashtag %></td>
+        <td><%= keyword %></td>
+        <td class="btn-small-wrapper"><%= link_to "<i class='material-icons'>create<i>".html_safe, edit_task_path(task), :class => "waves-effect waves-light btn btn-small" %></td>
+        <td class="btn-small-wrapper"><%= link_to "<i class='material-icons'>delete<i>".html_safe, task, method: :delete, data: { confirm: 'Are you sure?' }, :class => "waves-effect waves-light btn btn-small" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Task', new_task_path, :class => "btn" %>

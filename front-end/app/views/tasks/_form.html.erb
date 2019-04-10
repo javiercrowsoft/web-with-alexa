@@ -1,0 +1,111 @@
+<%= form_for(task) do |f| %>
+  <% if task.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(task.errors.count, "error") %> prohibited this task from being saved:</h2>
+
+      <ul>
+      <% task.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="row">
+    <div class="col s4">
+      <div class="field">
+        <%= f.label :code %>
+        <%= f.text_field :code %>
+      </div>
+    </div>
+    <div class="col s4">
+      <div class="field">
+        <%= f.label :name %>
+        <%= f.text_field :name %>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col s4">
+      <div class="field">
+        <%= f.label :status %>
+        <% status_array = TaskStatus.all.map{|status| [status.name, status.id]} %>
+        <%= f.select :task_status_id, options_for_select(status_array, f.object.task_status_id), class: "browser-default"%>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col s4">
+      <div class="field">
+        <%= f.label :countries %>
+        <% country_array = Country.all.map{|country| [country.name, country.id]} %>
+        <%= f.select :country_ids, options_for_select(country_array), {}, {:multiple => true, :size => 4, :name => 'country[country_ids][]'}%>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col s4">
+      <div class="field">
+        <%= f.label :start_date %>
+        <%= f.text_field :start_date, class: "datepicker" %>
+      </div>
+    </div>
+    <div class="col s4">
+      <div class="field">
+        <%= f.label :end_date %>
+        <%= f.text_field :end_date, class: "datepicker" %>
+      </div>
+    </div>
+  </div>
+  <h4>Twitter</h4>
+  <%
+  hashtag = ""
+  keyword = ""
+  if f.object.twitter_task.present?
+    hashtag = f.object.twitter_task.hashtag
+    keyword =  f.object.twitter_task.keyword
+  end
+  %>
+  <div class="row">
+    <div class="col s4">
+      <div class="field">
+        <%= f.label :hashtag %>
+        <%= f.text_field :hashtag, value: hashtag %>
+      </div>
+    </div>
+    <div class="col s4">
+      <div class="field">
+        <%= f.label :keyword %>
+        <%= f.text_field :keyword, value: keyword %>
+      </div>
+    </div>
+  </div>
+  <h4>Facebook</h4>
+  <%
+  page = ""
+  topic = ""
+  if f.object.facebook_task.present?
+    page = f.object.facebook_task.page
+    topic =  f.object.facebook_task.topic
+  end
+  %>
+  <div class="row">
+    <div class="col s4">
+      <div class="field">
+        <%= f.label :page %>
+        <%= f.text_field :page, value: page %>
+      </div>
+    </div>
+    <div class="col s4">
+      <div class="field">
+        <%= f.label :topic %>
+        <%= f.text_field :topic, value: topic %>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div>
+    <%= f.submit :class => "waves-effect waves-light btn" %>
+  </div>
+  <br>
+  <br>
+<% end %>

@@ -1,0 +1,203 @@
+<h1>Task</h1>
+
+<p id="notice"><%= notice %></p>
+<div class="row">
+  <div class="col s8">
+<div class="divider"></div>
+<div class="section">
+<div class="row">
+  <div class="col s6">
+    <div class="field">
+      <strong>code</strong>:
+      <%= @task.code %>
+    </div>
+  </div>
+  <div class="col s6">
+    <div class="field">
+      <strong>name</strong>:
+      <%= @task.name %>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col s6">
+    <div class="field">
+      <strong>status</strong>:
+      <%= @task.task_status.name %>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col s6">
+    <div class="field">
+      <strong>countries</strong>:
+      <%= @task.country_ids.map{|c| c[0]}.join(", ") %>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col s6">
+    <div class="field">
+      <strong>start_date</strong>:
+      <%= @task.start_date %>
+    </div>
+  </div>
+  <div class="col s6">
+    <div class="field">
+      <strong>end_date</strong>:
+      <%= @task.end_date %>
+    </div>
+  </div>
+</div>
+</div>
+<div class="divider"></div>
+<div class="section">
+<h4>Twitter</h4>
+<%
+hashtag = ""
+keyword = ""
+if @task.twitter_task.present?
+  hashtag = @task.twitter_task.hashtag
+  keyword =  @task.twitter_task.keyword
+end
+%>
+<div class="row">
+  <div class="col s6">
+    <div class="field">
+      <strong>hashtag</strong>:
+      <%= hashtag %>
+    </div>
+  </div>
+  <div class="col s6">
+    <div class="field">
+      <strong>keyword</strong>:
+      <%= keyword %>
+    </div>
+  </div>
+</div>
+</div>
+<div class="divider"></div>
+<div class="section">
+<h4>Facebook</h4>
+<%
+page = ""
+topic = ""
+if @task.facebook_task.present?
+  page = @task.facebook_task.page
+  topic =  @task.facebook_task.topic
+end
+%>
+<div class="row">
+  <div class="col s6">
+    <div class="field">
+      <strong>page</strong>:
+      <%= page %>
+    </div>
+  </div>
+  <div class="col s6">
+    <div class="field">
+      <strong>topic</strong>:
+      <%= topic %>
+    </div>
+  </div>
+</div>
+</div>
+<div class="divider"></div>
+<div class="section">
+<div class="row">
+  <div class="col s7">
+    <div id="canvas-holder" style="height:200px">
+       <canvas id="chart-area" />
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div class="col s4">
+  <table class="table" id="task-table">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Text</th>
+        <th>Sentiment</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      <% @task.load_last_analysis_result(7).each do |analysis| %>
+      <tr>
+        <td>
+          <%if analysis['type'] %>
+            <img class="background" src="<%= asset_path('twitter-48.png') %>">
+          <% end %>
+        </td>
+        <td><%= analysis['text'] %></td>
+        <td>
+          <%
+          sentiment_ico = "neutral.png"
+          if analysis['sentiment'] == 1
+            sentiment_ico = "positive.png"
+          elsif analysis['sentiment'] == 2
+            sentiment_ico = "negative.png"
+          end
+          %>
+          <img class="background" src="<%= asset_path(sentiment_ico) %>">
+        </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+</div>
+<div class="divider"></div>
+<div class="section">
+<%= link_to 'Edit', edit_task_path(@task), :class => "btn"%> |
+<%= link_to 'Back', tasks_path, :class => "btn"%>
+</div>
+<script>
+
+    window.chartColors = {
+    	red: 'rgb(255, 99, 132)',
+    	orange: 'rgb(255, 159, 64)',
+    	yellow: 'rgb(255, 205, 86)',
+    	green: 'rgb(75, 192, 192)',
+    	blue: 'rgb(54, 162, 235)',
+    	purple: 'rgb(153, 102, 255)',
+    	grey: 'rgb(201, 203, 207)'
+    };
+
+    var config = {
+        type: 'pie',
+        data: {
+            datasets: [{
+                data: [
+                    <%= @task.positive %>,
+                    <%= @task.neutral %>,
+                    <%= @task.negative %>
+                ],
+                backgroundColor: [
+                    window.chartColors.green,
+                    window.chartColors.yellow,
+                    window.chartColors.orange
+                ],
+                label: 'Dataset 1'
+            }],
+            labels: [
+                "Positive",
+                "Neutral",
+                "Negative"
+            ]
+        },
+        options: {
+            responsive: true
+        }
+    };
+
+    $(document).on('turbolinks:load', function() {
+        var ctx = document.getElementById("chart-area").getContext("2d");
+        window.myPie = new Chart(ctx, config);
+    });
+
+    setTimeout("location.reload();", 5000);
+</script>
